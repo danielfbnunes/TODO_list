@@ -10,7 +10,5 @@ data class Task (
         val id : String = UUID.randomUUID().toString(),
         val timestamp : Long,
         val name : String,
-        @Column(nullable = true)
-        val description : String?,
-        val isDone : Boolean
+        val status : Boolean
 )
