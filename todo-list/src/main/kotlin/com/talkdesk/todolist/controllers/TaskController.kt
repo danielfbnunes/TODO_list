@@ -18,7 +18,22 @@ class TaskController(
     }
 
     @PostMapping
-    fun newTask(@RequestBody task : Task) : Task {
-        return this.taskRepository.save(task)
+    fun newTask(@RequestBody task : Task) : ResponseEntity<Task> {
+        return ResponseEntity.ok(this.taskRepository.save(task))
+    }
+
+    @PatchMapping("/{id}")
+    fun updateTask(
+            @RequestBody params : Map<String, Object>,
+            @PathVariable("id") id : String
+    ) : ResponseEntity<Task>{
+        val task = this.taskRepository.findById(id)
+        if (!task.isEmpty){
+            val name = (params["name"] ?: task.get().name) as String
+            val description = (params["description"] ?: task.get().description) as String?
+            val isDone = (params["isDone"] ?: task.get().isDone) as Boolean
+            return ResponseEntity.ok(task.get().copy(name = name, description = description, isDone = isDone))
+        }
+        return ResponseEntity.notFound().build()
     }
 }
