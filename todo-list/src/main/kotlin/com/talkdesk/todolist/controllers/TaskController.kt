@@ -19,7 +19,8 @@ class TaskController(
 
     @PostMapping
     fun newTask(@RequestBody task : Task) : ResponseEntity<Task> {
-        return ResponseEntity.ok(this.taskRepository.save(task))
+        val taskWithCurrentTimestamp = task.copy(timestamp = System.currentTimeMillis());
+        return ResponseEntity.ok(this.taskRepository.save(taskWithCurrentTimestamp))
     }
 
     @PatchMapping("/{id}")
@@ -28,11 +29,12 @@ class TaskController(
             @PathVariable("id") id : String
     ) : ResponseEntity<Task>{
         val task = this.taskRepository.findById(id)
-        if (!task.isEmpty){
+        if (task.isPresent){
             val name = (params["name"] ?: task.get().name) as String
             val description = (params["description"] ?: task.get().description) as String?
             val isDone = (params["isDone"] ?: task.get().isDone) as Boolean
-            return ResponseEntity.ok(task.get().copy(name = name, description = description, isDone = isDone))
+            val taskUpdated = task.get().copy(name = name, description = description, isDone = isDone)
+            return ResponseEntity.ok(taskRepository.save(taskUpdated))
         }
         return ResponseEntity.notFound().build()
     }

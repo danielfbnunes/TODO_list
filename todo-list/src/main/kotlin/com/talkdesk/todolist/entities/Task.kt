@@ -1,14 +1,14 @@
 package com.talkdesk.todolist.entities
 
+import org.hibernate.annotations.CreationTimestamp
 import java.util.*
-import javax.persistence.Column
-import javax.persistence.Entity
-import javax.persistence.Id
+import javax.persistence.*
 
 @Entity
 data class Task (
         @Id
         val id : String = UUID.randomUUID().toString(),
+        val timestamp : Long,
         val name : String,
         @Column(nullable = true)
         val description : String?,
