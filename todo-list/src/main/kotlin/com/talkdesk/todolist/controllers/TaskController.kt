@@ -25,7 +25,7 @@ class TaskController(
     }
 
     @PatchMapping("/{id}/state")
-    fun changeStatus(@PathVariable id : String, @RequestBody params : Map<String, Object>) : ResponseEntity<Task> {
+    fun changeStatus(@PathVariable id : String, @RequestBody params : Map<String, Any>) : ResponseEntity<Task> {
         val task = this.taskRepository.findById(id)
 
         if (task.isPresent){
@@ -38,7 +38,7 @@ class TaskController(
 
     @PatchMapping("/{id}")
     fun updateTask(
-            @RequestBody params : Map<String, Object>,
+            @RequestBody params : Map<String, Any>,
             @PathVariable("id") id : String
     ) : ResponseEntity<Task>{
         val task = this.taskRepository.findById(id)
