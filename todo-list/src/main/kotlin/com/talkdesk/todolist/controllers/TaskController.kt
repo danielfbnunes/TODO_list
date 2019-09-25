@@ -7,7 +7,7 @@ import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 
 @RestController
-@RequestMapping("/task")
+@RequestMapping("/todos")
 class TaskController(
         private val taskRepository: TaskRepository
 ) {
@@ -27,10 +27,9 @@ class TaskController(
     @PatchMapping("/{id}/state")
     fun changeStatus(@PathVariable id : String, @RequestBody params : Map<String, Object>) : ResponseEntity<Task> {
         val task = this.taskRepository.findById(id)
-
         if (task.isPresent){
-            val isDone = (params["isDone"] ?: task.get().isDone) as Boolean
-            val updatedTask = task.get().copy(isDone = isDone)
+            val status = (params["status"] ?: task.get().status) as Boolean
+            val updatedTask = task.get().copy(status = status)
             return ResponseEntity.ok(this.taskRepository.save(updatedTask))
         }
         return ResponseEntity.notFound().build()
@@ -44,9 +43,8 @@ class TaskController(
         val task = this.taskRepository.findById(id)
         if (task.isPresent){
             val name = (params["name"] ?: task.get().name) as String
-            val description = (params["description"] ?: task.get().description) as String?
-            val isDone = (params["isDone"] ?: task.get().isDone) as Boolean
-            val taskUpdated = task.get().copy(name = name, description = description, isDone = isDone)
+            val status = (params["status"] ?: task.get().status) as Boolean
+            val taskUpdated = task.get().copy(name = name, status = status)
             return ResponseEntity.ok(taskRepository.save(taskUpdated))
         }
         return ResponseEntity.notFound().build()
