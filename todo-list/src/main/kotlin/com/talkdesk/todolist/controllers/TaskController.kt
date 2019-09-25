@@ -40,12 +40,11 @@ class TaskController(
         return ResponseEntity.notFound().build()
     }
 
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping("/{id}")
     fun deleteTask(
             @PathVariable id : String
     ) : ResponseEntity<Task>  {
         val task = this.taskRepository.findById(id)
-
         if (task.isPresent){
             this.taskRepository.deleteById(id)
             return ResponseEntity.status(HttpStatus.OK).build()
