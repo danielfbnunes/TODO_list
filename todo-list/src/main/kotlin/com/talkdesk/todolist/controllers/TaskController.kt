@@ -21,4 +21,16 @@ class TaskController(
     fun newTask(@RequestBody task : Task) : Task {
         return this.taskRepository.save(task)
     }
+
+    @PatchMapping("/{id}/state")
+    fun changeStatus(@PathVariable id : String, @RequestBody params : Map<String, Object>) : ResponseEntity<Task> {
+        val task = this.taskRepository.findById(id)
+
+        if (task.isPresent){
+            val isDone = (params["isDone"] ?: task.get().isDone) as Boolean
+            val updatedTask = task.get().copy(isDone = isDone)
+            return ResponseEntity.ok(this.taskRepository.save(updatedTask))
+        }
+        return ResponseEntity.notFound().build()
+    }
 }
